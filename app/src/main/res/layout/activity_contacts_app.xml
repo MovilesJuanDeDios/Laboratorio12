@@ -9,25 +9,35 @@
     tools:context=".ContactsApp"
     android:weightSum="1">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="249dp"
+        android:orientation="vertical">
+
+        <VideoView
+            android:id="@+id/id_video"
+            android:layout_width="match_parent"
+            android:layout_height="198dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/contactAddButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000000"
+            android:text="Add Contacts"
+            android:textColor="#ff0016"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </LinearLayout>
+
     <ListView
+        android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="410dp"
         android:layout_weight="0.58"
-        android:id="@+id/listView">
-
-
-
-
-    </ListView>
-
-    <Button
-        android:layout_width="269dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Add Contacts"
-        android:id="@+id/contactAddButton"
-        android:background="#000000"
-        android:textColor="#ff0016"
-        android:textStyle="bold"/>
+        android:visibility="visible"></ListView>
 
 </LinearLayout>

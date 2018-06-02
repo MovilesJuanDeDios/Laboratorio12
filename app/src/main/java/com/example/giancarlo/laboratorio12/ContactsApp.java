@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +39,9 @@ public class ContactsApp extends AppCompatActivity {
     Contacts contacts;
     ArrayAdapter mArrayAdapter;
 
-    final int C_View=1,C_Delete=2,C_Send=3,C_SMS=4,C_CALL=5;
+    final int C_View=1,C_Delete=2,C_Send=3,C_SMS=4,C_CALL=5,C_AUDIO=6,C_VIDEO=7,C_SEEVIDEO=8;
+    static final int REQUEST_VIDEO_CAPTURE = 1;
+    VideoView mVideoView;
 
 
     @Override
@@ -50,6 +54,8 @@ public class ContactsApp extends AppCompatActivity {
         listContacts= (ListView) findViewById(R.id.listView);
 
         contactAddButton= (Button) findViewById(R.id.contactAddButton);
+
+        mVideoView= (VideoView) findViewById(R.id.id_video);
 
         //add button listener
         contactAddButton.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +89,14 @@ public class ContactsApp extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         if (v.getId() == R.id.listView) {
-            menu.add(0, C_View, 1, "View");
-            menu.add(0, C_Delete, 2, "Delete");
-            menu.add(0,C_Send,3,"Send");
+            menu.add(0, C_View, 1, "VIEW");
+            menu.add(0, C_Delete, 2, "DELETE");
+            menu.add(0,C_Send,3,"SEND");
             menu.add(0,C_SMS,4,"SMS");
             menu.add(0,C_CALL,5,"CALL");
+            menu.add(0,C_AUDIO,6,"RECORD VOICE");
+            menu.add(0,C_VIDEO,7,"RECORD VIDEO");
+            menu.add(0,C_SEEVIDEO,8,"SEE VIDEO");
         }
 
     }
@@ -166,17 +175,30 @@ public class ContactsApp extends AppCompatActivity {
                 startActivity(intent1);
 
                 break;
+
+            case C_AUDIO:
+                Intent intentV=new Intent(ContactsApp.this,AudioRecord.class);
+                startActivity(intentV);
+                break;
+
+            case C_VIDEO:
+                dispatchTakeVideoIntent();
+
+                break;
+
+            case C_SEEVIDEO:
+                mVideoView.start();
+                break;
         }
         return  true;
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();
+            mVideoView.setVideoURI(videoUri);
+        }
         if (resultCode==2) {
 
             contacts = (Contacts) data.getSerializableExtra("data");
@@ -184,7 +206,12 @@ public class ContactsApp extends AppCompatActivity {
             arrayListContact.add(contacts);
             contactAdapter.notifyDataSetChanged();
         }
+    }
 
-
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
     }
 }

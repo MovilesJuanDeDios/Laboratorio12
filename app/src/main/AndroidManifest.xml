@@ -10,6 +10,7 @@
         <activity android:name=".Images"></activity>
         <activity android:name=".Data"></activity>
         <activity android:name=".ContactDetails"></activity>
+        <activity android:name=".AudioRecord"></activity>
 
         <activity
             android:name=".ContactsApp"
@@ -26,5 +27,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 </manifest>
